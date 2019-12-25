@@ -1,0 +1,18 @@
+image: docker:stable
+
+services:
+  - docker:dind
+
+stages:
+  - deploy
+
+deploy:
+  image: python:3
+  stage: deploy
+  when: on_success
+  before_script:
+    - cd deploy
+    - pip install -r requirements.txt
+    - echo "$SSH_PRIVATE_KEY" > key.pem
+  script:
+    - python deploy.py
