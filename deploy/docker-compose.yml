@@ -1,10 +1,43 @@
 version: '3.7'
 services:
+  backend:
+    image: marco79423/urmart-backend:latest
+    command: gunicorn backend.wsgi:application -b :8000
+    environment:
+      DATABASE_NAME: urmart
+      DATABASE_USER: urmart
+      DATABASE_PASSWORD: urmart
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+  celery-worker:
+    image: marco79423/urmart-backend:latest
+    command: celery -A backend worker -l info
+    environment:
+      DATABASE_NAME: urmart
+      DATABASE_USER: urmart
+      DATABASE_PASSWORD: urmart
+      DATABASE_HOST: database
+      DATABASE_PORT: 3306
+
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+    depends_on:
+      - database
+      - redis
   database:
     image: mysql:5.7
     volumes:
       - db-data:/var/lib/mysql
     restart: always
+    ports:
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: urmart
       MYSQL_DATABASE: urmart
@@ -20,5 +53,7 @@ services:
     restart: always
     ports:
       - 8080:80
+  redis:
+    image: redis:5.0
 volumes:
   db-data:

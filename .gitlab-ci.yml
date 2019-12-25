@@ -4,7 +4,20 @@ services:
   - docker:dind
 
 stages:
+  - build
   - deploy
+
+build-backend:
+  stage: build
+  before_script:
+    - docker --version
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - cd backend
+  script:
+    - docker build
+      --tag marco79423/urmart-backend:latest
+      .
+    - docker push marco79423/urmart-backend:latest
 
 deploy:
   image: python:3
