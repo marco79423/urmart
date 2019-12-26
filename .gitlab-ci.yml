@@ -9,6 +9,10 @@ stages:
 
 build-backend:
   stage: build
+  only:
+    changes:
+      - backend/**/*
+      - deploy/**/*
   before_script:
     - docker --version
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
