@@ -29,7 +29,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'localhost',
-    'urmart.marco79423.net'
+    'urmart.marco79423.net',
+    'backend',
 ]
 
 # Application definition
