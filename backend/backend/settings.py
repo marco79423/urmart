@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'nrt#%%l#w8bf*7nx)30g(di3(pg3ua=2_@_i@$-fy3l^4(_tff'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.environ.get('DEVELOPMENT', '') else True
+DEBUG = os.environ.get('DEVELOPMENT', '').lower() in ('on', 'yes', '1', 'enabled')
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -103,7 +103,6 @@ else:
         }
     }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -143,7 +142,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000",
+    'http://localhost:3000',
+    'http://urmart.marco79423.net',
+    'http://urmart.marco79423.net:3000',
 ]
 CORS_EXPOSE_HEADERS = (
     'content-disposition',

@@ -87,8 +87,12 @@ class Order(models.Model):
         except Order.DoesNotExist:
             raise errors.OrderNotFound()
 
-        with transaction.atomic():
+        try:
             product = Product.objects.get(id=order.product_id)
+        except Product.DoesNotExist:
+            raise errors.ProductNotFound()
+
+        with transaction.atomic():
             product.stock_pcs += order.qty
             product.save()
             order.delete()

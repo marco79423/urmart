@@ -1,0 +1,78 @@
+import React, {useEffect} from 'react'
+import {useDispatch, useSelector} from 'react-redux'
+import {createSelector} from '@reduxjs/toolkit'
+import {Checkbox, Table} from 'antd'
+
+import {fetchProductsRequest, getProducts, getShopMap} from '../duck'
+
+
+export function ProductTable({products}) {
+  
+  const columns = [
+    {
+      title: '商品 ID',
+      key: 'id',
+      dataIndex: 'id',
+    },
+    {
+      title: '商品名稱',
+      key: 'name',
+      dataIndex: 'name',
+    },
+    {
+      title: '商品庫存數量',
+      key: 'stockPcs',
+      dataIndex: 'stockPcs',
+    },
+    {
+      title: '商品單價',
+      key: 'price',
+      dataIndex: 'price',
+    },
+    {
+      title: '館別',
+      key: 'shopName',
+      dataIndex: 'shopName',
+    },
+    {
+      title: 'VIP',
+      key: 'vip',
+      dataIndex: 'vip',
+      render: (vip) => {
+        return <Checkbox defaultChecked={vip} disabled/>
+      }
+    },
+  ]
+
+  return (
+    <Table columns={columns} dataSource={products}/>
+  )
+}
+
+const selectProducts = createSelector(
+  getProducts,
+  getShopMap,
+  (products, shopMap) => products
+    .map(product => ({
+      key: product.id,
+      id: product.id,
+      name: product.name,
+      stockPcs: product.stockPcs,
+      price: product.price,
+      shopName: shopMap[product.shopId] ? shopMap[product.shopId].name : null,
+      vip: product.vip,
+    }))
+)
+
+export default function () {
+  const products = useSelector(selectProducts)
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchProductsRequest())
+  }, [dispatch])
+
+  return (
+    <ProductTable products={products}/>
+  )
+}

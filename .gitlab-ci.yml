@@ -7,6 +7,25 @@ stages:
   - build
   - deploy
 
+build-frontend:
+  stage: build
+  only:
+    changes:
+      - frontend/**/*
+      - deploy/**/*
+  before_script:
+    - docker --version
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - BACKEND_SERVER_URL=http://urmart.marco79423.net
+  script:
+    - docker build
+      --file frontend/Dockerfile
+      --build-arg REACT_APP_BACKEND_SERVER_URL=$BACKEND_SERVER_URL
+      --tag marco79423/urmart-frontend:latest
+      .
+    - docker push marco79423/urmart-frontend:latest
+  coverage: '/^Statements\s+: ([\d.]+%)/'
+
 build-backend:
   stage: build
   only:

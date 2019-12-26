@@ -6,6 +6,10 @@ services:
       - 80:80
     volumes:
       - "./nginx.conf:/etc/nginx/conf.d/default.conf:ro"
+  frontend:
+    image: marco79423/urmart-frontend:latest
+    ports:
+      - 3000:3000
   backend:
     image: marco79423/urmart-backend:latest
     command: gunicorn backend.wsgi:application -b :8000
