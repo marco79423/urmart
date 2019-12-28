@@ -49,11 +49,9 @@ export const initialState = {
   },
   createOrderTask: {
     loading: false,
-    error: null,
   },
   createReportTask: {
     loading: false,
-    error: null,
   },
 }
 
@@ -78,6 +76,7 @@ export const reducer = createReducer(initialState, {
     shops: {
       loading: false,
       data: [],
+      error: action.payload,
     },
   }),
 
@@ -101,6 +100,7 @@ export const reducer = createReducer(initialState, {
     products: {
       loading: false,
       data: [],
+      error: action.payload,
     },
   }),
 
@@ -110,7 +110,6 @@ export const reducer = createReducer(initialState, {
     orders: {
       loading: true,
       data: [],
-      error: null,
     },
   }),
   [fetchOrdersSuccess]: (state, action) => ({
@@ -125,6 +124,7 @@ export const reducer = createReducer(initialState, {
     orders: {
       loading: false,
       data: [],
+      error: action.payload,
     },
   }),
 
@@ -133,14 +133,12 @@ export const reducer = createReducer(initialState, {
     ...state,
     createOrderTask: {
       loading: true,
-      error: null,
     },
   }),
   [createOrderSuccess]: (state, action) => ({
     ...state,
     createOrderTask: {
       loading: false,
-      error: null,
     },
   }),
   [createOrderFailure]: (state, action) => ({
@@ -156,14 +154,12 @@ export const reducer = createReducer(initialState, {
     ...state,
     createReportTask: {
       loading: true,
-      error: null,
     },
   }),
   [createReportSuccess]: (state, action) => ({
     ...state,
     createReportTask: {
       loading: false,
-      error: null,
     },
   }),
   [createReportFailure]: (state, action) => ({
@@ -189,7 +185,7 @@ export const getShopMap = createSelector(
 
 export const isProductsLoading = state => state.products.loading
 export const getProducts = state => state.products.data
-export const selectProductMap = createSelector(
+export const getProductMap = createSelector(
   getProducts,
   products => products
     .reduce((productMap, product) => ({
@@ -214,7 +210,7 @@ export function* rootSaga() {
   yield takeEvery(createReportRequest, createReportSaga)
 }
 
-function* fetchShopsSaga() {
+export function* fetchShopsSaga() {
   try {
     if (yield select(isShopsLoading)) {
       return
@@ -229,7 +225,7 @@ function* fetchShopsSaga() {
   }
 }
 
-function* fetchProductListSaga() {
+export function* fetchProductListSaga() {
   try {
     if (yield select(isProductsLoading)) {
       return
@@ -244,7 +240,7 @@ function* fetchProductListSaga() {
   }
 }
 
-function* fetchOrderListSaga() {
+export function* fetchOrderListSaga() {
   try {
     if (yield select(isOrdersLoading)) {
       return
@@ -260,9 +256,9 @@ function* fetchOrderListSaga() {
   }
 }
 
-function* createOrderSaga(action) {
+export function* createOrderSaga(action) {
   try {
-    const productMap = yield select(selectProductMap)
+    const productMap = yield select(getProductMap)
 
     const orderData = action.payload
     const targetProduct = productMap[orderData.productId]
@@ -281,11 +277,13 @@ function* createOrderSaga(action) {
   }
 }
 
-function* deleteOrderSaga(action) {
+export function* deleteOrderSaga(action) {
   try {
     const orderId = action.payload
+
+    yield put(deleteOrderProcessing())
     yield call(apis.deleteOrder, orderId)
-    yield put(deleteOrderSuccess())
+    yield put(deleteOrderSuccess(orderId))
     yield put(fetchOrdersRequest())
     yield put(fetchProductsRequest())
   } catch (e) {
@@ -293,7 +291,7 @@ function* deleteOrderSaga(action) {
   }
 }
 
-function* createReportSaga(action) {
+export function* createReportSaga(action) {
   try {
     const topic = action.payload
 

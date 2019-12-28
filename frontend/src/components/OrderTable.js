@@ -61,7 +61,7 @@ const selectOrders = createSelector(
   ducks.isShopsLoading,
   ducks.isProductsLoading,
   ducks.getShopMap,
-  ducks.selectProductMap,
+  ducks.getProductMap,
   (orders, isShopsFetching, isProductsFetching, shopMap, productMap) => (isShopsFetching || isProductsFetching) ? [] : orders
     .map(order => ({
       key: order.id,
