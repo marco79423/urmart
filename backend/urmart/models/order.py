@@ -67,11 +67,15 @@ class Order(models.Model):
     @vip_check
     @stock_check
     def create_order(json_data):
-        with transaction.atomic():
+        try:
             product = Product.objects.get(id=json_data['productId'])
-            product.stock_pcs -= json_data['qty']
+        except Product.DoesNotExist:
+            raise errors.ProductNotFound()
 
+        with transaction.atomic():
+            product.stock_pcs -= json_data['qty']
             product.save()
+
             return Order.objects.create(
                 product_id=json_data.get('productId'),
                 qty=json_data.get('qty'),
