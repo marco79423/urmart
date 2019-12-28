@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {Button, Col, message, Row} from 'antd'
 
-import * as ducks from '../duck'
+import * as ducks from '../ducks'
 
 import styles from './Toolbox.module.css'
 

@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 import configureStore from 'redux-mock-store'
 
 import Main from './Main'
-import {initialState} from '../duck'
+import {initialState} from '../ducks'
 
 const mockStore = configureStore()
 

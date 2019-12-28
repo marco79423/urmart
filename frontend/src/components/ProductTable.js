@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {createSelector} from '@reduxjs/toolkit'
 import {Checkbox, Spin, Table} from 'antd'
 
-import * as ducks from '../duck'
+import * as ducks from '../ducks'
 
 
 export function ProductTable({loading, products}) {

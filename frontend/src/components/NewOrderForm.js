@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux'
 import {Button, Cascader, Checkbox, Col, Form, Input, InputNumber, message, Row, Tooltip} from 'antd'
 import {createSelector} from '@reduxjs/toolkit'
 
-import * as ducks from '../duck'
+import * as ducks from '../ducks'
 
 
 export function NewOrderForm({form, productOptions, createOrder, createOrderTask}) {
