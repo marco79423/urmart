@@ -268,11 +268,12 @@ function* createOrderSaga(action) {
     const targetProduct = productMap[orderData.productId]
 
     yield put(createOrderProcessing())
-    yield call(apis.postOrder, {
+    const response = yield call(apis.postOrder, {
       ...orderData,
       price: targetProduct.price,
     })
-    yield put(createOrderSuccess())
+    const newOrder = response.data
+    yield put(createOrderSuccess(newOrder))
     yield put(fetchOrdersRequest())
     yield put(fetchProductsRequest())
   } catch (e) {
@@ -286,6 +287,7 @@ function* deleteOrderSaga(action) {
     yield call(apis.deleteOrder, orderId)
     yield put(deleteOrderSuccess())
     yield put(fetchOrdersRequest())
+    yield put(fetchProductsRequest())
   } catch (e) {
     yield put(deleteOrderFailure(e))
   }

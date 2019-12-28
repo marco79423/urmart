@@ -4,9 +4,15 @@ import ReactTestRenderer from 'react-test-renderer'
 import {ProductTable} from './ProductTable'
 
 test('it should render ProductTable component correctly with empty product list', () => {
-  const component = ReactTestRenderer.create(<ProductTable/>);
+  const component = ReactTestRenderer.create(<ProductTable/>)
   expect(component.toJSON()).toMatchSnapshot()
 });
+
+test('it should render ProductTable component correctly in loading state', () => {
+  const component = ReactTestRenderer.create(<ProductTable loading={true}/>)
+  expect(component.toJSON()).toMatchSnapshot()
+});
+
 
 test('it should render ProductTable component correctly with product list', () => {
 
@@ -40,6 +46,6 @@ test('it should render ProductTable component correctly with product list', () =
     },
   ]
 
-  const component = ReactTestRenderer.create(<ProductTable products={products}/>);
+  const component = ReactTestRenderer.create(<ProductTable products={products}/>)
   expect(component.toJSON()).toMatchSnapshot()
 });

@@ -8,6 +8,11 @@ test('it should render OrderTable component correctly with empty order list', ()
   expect(component.toJSON()).toMatchSnapshot()
 });
 
+test('it should render OrderTable component correctly in loading state', () => {
+  const component = ReactTestRenderer.create(<OrderTable loading={true}/>);
+  expect(component.toJSON()).toMatchSnapshot()
+});
+
 test('it should render OrderTable component correctly with product list', () => {
   const orders = [
     {

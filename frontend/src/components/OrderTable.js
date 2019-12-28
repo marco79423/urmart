@@ -1,21 +1,11 @@
-import React, {useEffect} from 'react'
+import React, {useCallback, useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {Button, Popconfirm, Table} from 'antd'
-
-import {
-  deleteOrderRequest,
-  fetchOrdersRequest,
-  fetchProductsRequest,
-  fetchShopsRequest,
-  getOrders,
-  getShopMap,
-  isProductsFetching,
-  isShopsFetching,
-  selectProductMap
-} from '../duck'
 import {createSelector} from '@reduxjs/toolkit'
+import {Button, Popconfirm, Spin, Table} from 'antd'
 
-export function OrderTable({orders, deleteOrder}) {
+import * as ducks from '../duck'
+
+export function OrderTable({loading, orders, deleteOrder}) {
 
   const columns = [
     {
@@ -60,16 +50,18 @@ export function OrderTable({orders, deleteOrder}) {
   ]
 
   return (
-    <Table columns={columns} dataSource={orders}/>
+    <Spin spinning={loading}>
+      <Table columns={columns} dataSource={orders}/>
+    </Spin>
   )
 }
 
 const selectOrders = createSelector(
-  getOrders,
-  isShopsFetching,
-  isProductsFetching,
-  getShopMap,
-  selectProductMap,
+  ducks.getOrders,
+  ducks.isShopsFetching,
+  ducks.isProductsFetching,
+  ducks.getShopMap,
+  ducks.selectProductMap,
   (orders, isShopsFetching, isProductsFetching, shopMap, productMap) => (isShopsFetching || isProductsFetching) ? [] : orders
     .map(order => ({
       key: order.id,
@@ -85,17 +77,18 @@ const selectOrders = createSelector(
 
 export default function () {
   const orders = useSelector(selectOrders)
+  const loading = useSelector(ducks.isOrdersFetching)
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchShopsRequest())
-    dispatch(fetchProductsRequest())
-    dispatch(fetchOrdersRequest())
+    dispatch(ducks.fetchShopsRequest())
+    dispatch(ducks.fetchProductsRequest())
+    dispatch(ducks.fetchOrdersRequest())
   }, [dispatch])
 
-  const deleteOrder = orderId => dispatch(deleteOrderRequest(orderId))
+  const deleteOrder = useCallback(orderId => dispatch(ducks.deleteOrderRequest(orderId)), [dispatch])
 
   return (
-    <OrderTable orders={orders} deleteOrder={deleteOrder}/>
+    <OrderTable loading={loading} orders={orders} deleteOrder={deleteOrder}/>
   )
 }

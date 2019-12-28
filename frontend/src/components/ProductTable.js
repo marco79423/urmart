@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
 import {createSelector} from '@reduxjs/toolkit'
-import {Checkbox, Table} from 'antd'
+import {Checkbox, Spin, Table} from 'antd'
 
-import {fetchProductsRequest, getProducts, getShopMap} from '../duck'
+import * as ducks from '../duck'
 
 
-export function ProductTable({products}) {
-  
+export function ProductTable({loading, products}) {
+
   const columns = [
     {
       title: '商品 ID',
@@ -45,13 +45,15 @@ export function ProductTable({products}) {
   ]
 
   return (
-    <Table columns={columns} dataSource={products}/>
+    <Spin spinning={loading}>
+      <Table columns={columns} dataSource={products}/>
+    </Spin>
   )
 }
 
 const selectProducts = createSelector(
-  getProducts,
-  getShopMap,
+  ducks.getProducts,
+  ducks.getShopMap,
   (products, shopMap) => products
     .map(product => ({
       key: product.id,
@@ -66,13 +68,14 @@ const selectProducts = createSelector(
 
 export default function () {
   const products = useSelector(selectProducts)
+  const loading = useSelector(ducks.isProductsFetching)
 
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(fetchProductsRequest())
+    dispatch(ducks.fetchProductsRequest())
   }, [dispatch])
 
   return (
-    <ProductTable products={products}/>
+    <ProductTable loading={loading} products={products}/>
   )
 }
