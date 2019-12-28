@@ -68,7 +68,7 @@ const selectProducts = createSelector(
 
 export default function () {
   const products = useSelector(selectProducts)
-  const loading = useSelector(ducks.isProductsFetching)
+  const loading = useSelector(ducks.isProductsLoading)
 
   const dispatch = useDispatch()
   useEffect(() => {

@@ -36,15 +36,15 @@ export const createReportFailure = createAction('createReportFailure')
 
 export const initialState = {
   shops: {
-    isFetching: false,
+    loading: false,
     data: [],
   },
   products: {
-    isFetching: false,
+    loading: false,
     data: [],
   },
   orders: {
-    isFetching: false,
+    loading: false,
     data: [],
   },
   createOrderTask: {
@@ -62,21 +62,21 @@ export const reducer = createReducer(initialState, {
   [fetchShopsProcessing]: (state, action) => ({
     ...state,
     shops: {
-      isFetching: true,
+      loading: true,
       data: [],
     },
   }),
   [fetchShopsSuccess]: (state, action) => ({
     ...state,
     shops: {
-      isFetching: false,
+      loading: false,
       data: action.payload
     },
   }),
   [fetchShopsFailure]: (state, action) => ({
     ...state,
     shops: {
-      isFetching: false,
+      loading: false,
       data: [],
     },
   }),
@@ -85,21 +85,21 @@ export const reducer = createReducer(initialState, {
   [fetchProductsProcessing]: (state, action) => ({
     ...state,
     products: {
-      isFetching: true,
+      loading: true,
       data: [],
     },
   }),
   [fetchProductsSuccess]: (state, action) => ({
     ...state,
     products: {
-      isFetching: false,
+      loading: false,
       data: action.payload
     },
   }),
   [fetchProductsFailure]: (state, action) => ({
     ...state,
     products: {
-      isFetching: false,
+      loading: false,
       data: [],
     },
   }),
@@ -108,7 +108,7 @@ export const reducer = createReducer(initialState, {
   [fetchOrdersProcessing]: (state, action) => ({
     ...state,
     orders: {
-      isFetching: true,
+      loading: true,
       data: [],
       error: null,
     },
@@ -116,14 +116,14 @@ export const reducer = createReducer(initialState, {
   [fetchOrdersSuccess]: (state, action) => ({
     ...state,
     orders: {
-      isFetching: false,
+      loading: false,
       data: action.payload
     },
   }),
   [fetchOrderFailure]: (state, action) => ({
     ...state,
     orders: {
-      isFetching: false,
+      loading: false,
       data: [],
     },
   }),
@@ -176,7 +176,7 @@ export const reducer = createReducer(initialState, {
 })
 
 
-export const isShopsFetching = state => state.shops.isFetching
+export const isShopsLoading = state => state.shops.loading
 export const getShops = state => state.shops.data
 export const getShopMap = createSelector(
   getShops,
@@ -187,7 +187,7 @@ export const getShopMap = createSelector(
     }), {})
 )
 
-export const isProductsFetching = state => state.products.isFetching
+export const isProductsLoading = state => state.products.loading
 export const getProducts = state => state.products.data
 export const selectProductMap = createSelector(
   getProducts,
@@ -198,7 +198,7 @@ export const selectProductMap = createSelector(
     }), {})
 )
 
-export const isOrdersFetching = state => state.orders.isFetching
+export const isOrdersLoading = state => state.orders.loading
 export const getOrders = state => state.orders.data
 
 export const getCreateOrderTask = state => state.createOrderTask
@@ -216,7 +216,7 @@ export function* rootSaga() {
 
 function* fetchShopsSaga() {
   try {
-    if (yield select(isShopsFetching)) {
+    if (yield select(isShopsLoading)) {
       return
     }
     yield put(fetchShopsProcessing())
@@ -231,7 +231,7 @@ function* fetchShopsSaga() {
 
 function* fetchProductListSaga() {
   try {
-    if (yield select(isProductsFetching)) {
+    if (yield select(isProductsLoading)) {
       return
     }
     yield put(fetchProductsProcessing())
@@ -246,7 +246,7 @@ function* fetchProductListSaga() {
 
 function* fetchOrderListSaga() {
   try {
-    if (yield select(isOrdersFetching)) {
+    if (yield select(isOrdersLoading)) {
       return
     }
     yield put(fetchOrdersProcessing())

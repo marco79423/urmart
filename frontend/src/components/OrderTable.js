@@ -58,8 +58,8 @@ export function OrderTable({loading, orders, deleteOrder}) {
 
 const selectOrders = createSelector(
   ducks.getOrders,
-  ducks.isShopsFetching,
-  ducks.isProductsFetching,
+  ducks.isShopsLoading,
+  ducks.isProductsLoading,
   ducks.getShopMap,
   ducks.selectProductMap,
   (orders, isShopsFetching, isProductsFetching, shopMap, productMap) => (isShopsFetching || isProductsFetching) ? [] : orders
@@ -77,7 +77,7 @@ const selectOrders = createSelector(
 
 export default function () {
   const orders = useSelector(selectOrders)
-  const loading = useSelector(ducks.isOrdersFetching)
+  const loading = useSelector(ducks.isOrdersLoading)
 
   const dispatch = useDispatch()
   useEffect(() => {

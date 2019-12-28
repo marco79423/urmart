@@ -82,11 +82,11 @@ export function NewOrderForm({form, productOptions, createOrder, createOrderTask
 }
 
 const getProductOptions = createSelector(
-  ducks.isShopsFetching,
-  ducks.isProductsFetching,
+  ducks.isShopsLoading,
+  ducks.isProductsLoading,
   ducks.getShops,
   ducks.getProducts,
-  (isShopsFetching, isProductsFetching, shops, products) => (isShopsFetching || isProductsFetching) ? [] : shops
+  (isShopsLoading, isProductsLoading, shops, products) => (isShopsLoading || isProductsLoading) ? [] : shops
     .map(shop => ({
       value: shop.id,
       label: shop.name,
