@@ -9,10 +9,6 @@ stages:
 
 build-frontend:
   stage: build
-  only:
-    changes:
-      - frontend/**/*
-      - deploy/**/*
   before_script:
     - docker --version
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -28,10 +24,6 @@ build-frontend:
 
 build-backend:
   stage: build
-  only:
-    changes:
-      - backend/**/*
-      - deploy/**/*
   before_script:
     - docker --version
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
@@ -41,6 +33,7 @@ build-backend:
       --tag marco79423/urmart-backend:latest
       .
     - docker push marco79423/urmart-backend:latest
+  coverage: '/^TOTAL\s+\d+\s+\d+\s+(\d+\%)$/'
 
 deploy:
   image: python:3

@@ -4,3 +4,4 @@ celery[redis]==4.4.0
 gunicorn==20.0.4
 whitenoise==5.0.1
 mysqlclient==1.4.6
+coverage==5.0.1

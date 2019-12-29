@@ -2,6 +2,8 @@ Urmart
 ======
 
 [![pipeline status](https://gitlab.com/marco79423/urmart/badges/master/pipeline.svg)](https://gitlab.com/marco79423/urmart/commits/master)
+frontend: [![frontend coverage](https://gitlab.com/marco79423/urmart/badges/master/coverage.svg?job=build-frontend)](https://gitlab.com/marco79423/urmart/commits/master)
+backend: [![backend coverage](https://gitlab.com/marco79423/urmart/badges/master/coverage.svg?job=build-backend)](https://gitlab.com/marco79423/urmart/commits/master)
 
 ## 前言
 

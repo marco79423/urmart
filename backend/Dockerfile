@@ -9,6 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 RUN python manage.py collectstatic --noinput
-RUN python manage.py test
+RUN python -m coverage run --source='.' manage.py test && python -m coverage report
 
 ENTRYPOINT ["/bin/sh", "./entry_point.sh"]
