@@ -1065,7 +1065,7 @@ exports[`it should render Main component correctly 1`] = `
             type="button"
           >
             <span>
-              統 計
+              各館統計
             </span>
           </button>
         </div>

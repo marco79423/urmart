@@ -18,7 +18,7 @@ export function Toolbox({createReportTask, downloadTop3Report, downloadStatistic
   return (
     <Row type="flex">
       <Col><Button loading={loading} className={styles.button} onClick={downloadTop3Report}>Top3</Button></Col>
-      <Col><Button loading={loading} className={styles.button} onClick={downloadStatisticsByShopReport}>統計</Button></Col>
+      <Col><Button loading={loading} className={styles.button} onClick={downloadStatisticsByShopReport}>各館統計</Button></Col>
     </Row>
   )
 }
