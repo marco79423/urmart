@@ -1,5 +1,5 @@
 import React from 'react'
-import {call, put, select} from 'redux-saga/effects'
+import {call, put, select, delay} from 'redux-saga/effects'
 
 import * as ducks from './ducks'
 import * as apis from './apis'
@@ -878,6 +878,139 @@ describe('saga', () => {
 
     it('should notify the success', () => {
       expect(generator.next({data: []}).value).toEqual(put(ducks.fetchOrdersSuccess([])))
+    })
+  })
+
+  describe('createOrderSaga', () => {
+    const orderData = {
+      productId: 1,
+      qty: 1,
+      customerId: 1,
+      vip: false,
+    }
+    const generator = ducks.createOrderSaga(ducks.createOrderRequest(orderData))
+
+    it('should get the product map from state', () => {
+      expect(generator.next().value).toEqual(select(ducks.getProductMap))
+    })
+
+    it('should set the loading state to state', () => {
+      const productMap = {
+        1: {
+          key: 1,
+          id: 1,
+          name: 'product A1',
+          stockPcs: 4,
+          price: 100.0,
+          shopId: 1,
+          vip: false
+        },
+      }
+      expect(generator.next(productMap).value).toEqual(put(ducks.createOrderProcessing()))
+    })
+
+    it('should create orders from backend', () => {
+      expect(generator.next(false).value).toEqual(call(apis.postOrder, {
+        productId: 1,
+        qty: 1,
+        customerId: 1,
+        vip: false,
+        price: 100.0,
+      }))
+    })
+
+    it('should notify the success', () => {
+      const newOrder = {
+        id: 1,
+        ...orderData
+      }
+      expect(generator.next({data: newOrder}).value).toEqual(put(ducks.createOrderSuccess(newOrder)))
+    })
+
+    it('should make a fetch orders request', () => {
+      expect(generator.next().value).toEqual(put(ducks.fetchOrdersRequest()))
+    })
+
+    it('should make a fetch products request', () => {
+      expect(generator.next().value).toEqual(put(ducks.fetchProductsRequest()))
+    })
+  })
+
+  describe('deleteOrderSaga', () => {
+    const orderId = 1
+    const generator = ducks.deleteOrderSaga(ducks.deleteOrderRequest(orderId))
+
+    it('should set the loading state to state', () => {
+      expect(generator.next().value).toEqual(put(ducks.deleteOrderProcessing()))
+    })
+
+    it('should delete the target order from backend', () => {
+      expect(generator.next().value).toEqual(call(apis.deleteOrder, orderId))
+    })
+
+    it('should notify the success', () => {
+      expect(generator.next().value).toEqual(put(ducks.deleteOrderSuccess(orderId)))
+    })
+
+    it('should make a fetch orders request', () => {
+      expect(generator.next().value).toEqual(put(ducks.fetchOrdersRequest()))
+    })
+
+    it('should make a fetch products request', () => {
+      expect(generator.next().value).toEqual(put(ducks.fetchProductsRequest()))
+    })
+  })
+
+
+  describe('createReportSaga', () => {
+    const topic = 'top3'
+    const generator = ducks.createReportSaga(ducks.createOrderRequest(topic))
+
+    it('should set the loading state to state', () => {
+      expect(generator.next().value).toEqual(put(ducks.createReportProcessing()))
+    })
+
+    it('should create the target report from backend', () => {
+      expect(generator.next().value).toEqual(call(apis.postTask, topic))
+    })
+    it('should get the status from backend', () => {
+      const response = {
+        data: {
+          id: 1
+        }
+      }
+      expect(generator.next(response).value).toEqual(call(apis.getTaskStatus, response.data.id))
+    })
+
+    it('should wait a second', () => {
+      const response = {
+        data: {
+          state: 'PENDING'
+        }
+      }
+      expect(generator.next(response).value).toEqual(delay(1000))
+    })
+
+    it('should get the status from backend', () => {
+      const response = {
+        data: {
+          id: 1
+        }
+      }
+      expect(generator.next(response).value).toEqual(call(apis.getTaskStatus, response.data.id))
+    })
+
+    it('should download the report from backend', () => {
+      const response = {
+        data: {
+          state: 'SUCCESS'
+        }
+      }
+      expect(generator.next(response).value).toEqual(call(apis.downloadTaskResult, 1))
+    })
+
+    it('should notify the success', () => {
+      expect(generator.next().value).toEqual(put(ducks.createReportSuccess()))
     })
   })
 })
