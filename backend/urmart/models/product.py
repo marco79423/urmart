@@ -8,6 +8,11 @@ class Product(models.Model):
     shop_id = models.IntegerField()
     vip = models.BooleanField()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['shop_id', ])
+        ]
+
     def serialize(self):
         return {
             'id': self.id,

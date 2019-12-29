@@ -24,10 +24,11 @@ def generate_top3_report():
         sql = fp.read()
 
     with io.StringIO() as fp:
-        writer = csv.DictWriter(fp, fieldnames=('name', 'qty',))
+        writer = csv.DictWriter(fp, fieldnames=('id', 'name', 'qty',))
         writer.writeheader()
         for r in Order.objects.raw(sql):
             writer.writerow({
+                'id': r.id,
                 'name': r.name,
                 'qty': r.qty
             })

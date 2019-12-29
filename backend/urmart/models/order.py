@@ -52,6 +52,11 @@ class Order(models.Model):
     customer_id = models.IntegerField()
     vip = models.BooleanField()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['product_id', ])
+        ]
+
     def serialize(self):
         return {
             'id': self.id,
